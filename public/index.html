@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BRAC University Parking</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        #dataDisplay {
+            margin-top: 20px;
+        }
+        ul {
+            list-style-type: none;
+        }
+        li {
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        h1, h2 {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to BRAC University Parking</h1>
+    <button id="fetchDataBtn">Fetch Data from Database</button>
+
+    <!-- Section to display the data -->
+    <div id="dataDisplay"></div>
+
+    <script>
+        // Function to fetch data from the server
+        document.getElementById('fetchDataBtn').addEventListener('click', function() {
+            fetch('http://localhost:3000/api/data') // API endpoint of your Node.js server
+                .then(response => response.json())
+                .then(data => {
+                    // Display data in the browser
+                    let output = '<table border="1">';
+                    output += '<tr><th>User ID</th><th>Email</th><th>Password</th></tr>';
+                    data.forEach(user => {
+                        output += `<tr>
+                                      <td>${user.UserID}</td>
+                                      <td>${user.User_email}</td>
+                                      <td>${user.password}</td>
+                                   </tr>`;
+                    });
+                    output += '</ul>';
+                    document.getElementById('dataDisplay').innerHTML = output;
+                })
+                .catch(err => {
+                    console.error('Error fetching data:', err);
+                    document.getElementById('dataDisplay').innerHTML = '<p style="color: red;">Error fetching data from database</p>';
+                });
+        });
+    </script>
+</body>
+</html>
