@@ -1,6 +1,8 @@
 const express = require('express');
 const mysql = require('mysql2');
 const app = express();
+const path = require('path');
+
 const port = 3000; // You can choose any port number
 
 // MySQL database connection
@@ -20,9 +22,15 @@ connection.connect((err) => {
         console.log('Connected to the MySQL database.');
     }
 });
+const cors = require('cors');
+app.use(cors()); // Use CORS with default settings
 
 // Serve static files (for serving HTML, CSS, and client-side JS)
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')))
+
+//path of reservation table
+const reservationRoute = require('./reservation');
+app.use('/reservation', reservationRoute)
   
 
 // Example route: Fetch data from a table

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservation Data</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>Reservation Table</h1>
+    
+    <button id="fetchDataBtn">Fetch Reservation Data</button>
+
+    <div id="dataDisplay">
+        <table>
+            <thead>
+                <tr>
+                    <th>Location ID</th>
+                    <th>User ID</th>
+                    <th>Car Number</th>
+                    <th>Car Type</th>
+                    <th>Date</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                </tr>
+            </thead>
+            <tbody id="reservationData">
+                <!-- Reservation data will be displayed here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Fetch reservation data when button is clicked
+        document.getElementById('fetchButton').addEventListener('click', function() {
+            fetch('http://localhost:3000/api/reservation') // API endpoint
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const tableBody = document.getElementById('reservationData');
+                    tableBody.innerHTML = ''; // Clear previous data
+                    data.forEach(item => {
+                        let row = `<tr>
+                                        <td>${reservation.Location_ID}</td>
+                                        <td>${reservation.User_id}</td>
+                                        <td>${reservation.Car_Number}</td>
+                                        <td>${reservation.Car_type}</td>
+                                        <td>${reservation.Date}</td>
+                                        <td>${reservation.Start_time}</td>
+                                        <td>${reservation.End_time}</td>
+                                   </tr>`;
+                        tableBody.innerHTML += row;
+                
+                    });
+                })
+                .catch(err => {
+                    console.error('Error fetching reservation data:', err);
+                    document.getElementById('reservationData').innerHTML = '<tr><td colspan="7" style="color: red;">Error fetching reservation data</td></tr>';
+                });
+        });
+    </script>
+</body>
+</html>
