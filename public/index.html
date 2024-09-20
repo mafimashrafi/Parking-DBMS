@@ -58,5 +58,51 @@
         });
     </script>
     <button onclick="window.location.href='reservation.html';">View Reservation Table</button>
+    <h1>Login</h1>
+    <form id="loginForm">
+        <label for="UserID">User ID:</label>
+        <input type="text" id="UserID" name="UserID" required>
+        <br>
+
+        <label for="User_email">Email:</label>
+        <input type="email" id="User_email" name="User_email" required>
+        <br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <br>
+
+        <button type="submit">Login</button>
+    </form>
+
+    <script>
+        const loginForm = document.getElementById('loginForm');
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const UserID = document.getElementById('UserID').value;
+            const User_email = document.getElementById('User_email').value;
+            const password = document.getElementById('password').value;
+
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ UserID, User_email, password }),
+            });
+
+            const data = await response.json();
+
+            if (data.token) {
+                alert('Login successful');
+                // You can save the token in localStorage or cookies here if needed
+                localStorage.setItem('token', data.token);
+            } else {
+                alert('Login failed: ' + data.message);
+            }
+        });
+    </script>
 </body>
 </html>

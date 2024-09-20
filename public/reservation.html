@@ -55,12 +55,17 @@
                 .then(data => {
                     const tableBody = document.getElementById('reservationData');
                     tableBody.innerHTML = ''; // Clear previous data
+
+                    if (data.length === 0) {
+                        tableBody.innerHTML = '<tr><td colspan="7">No reservations found.</td></tr>'; // Handle no data case
+                        return;
+                    }
                     data.forEach(item => {
                         let row = `<tr>
                                         <td>${reservation.Location_ID}</td>
                                         <td>${reservation.User_id}</td>
                                         <td>${reservation.Car_Number}</td>
-                                        <td>${reservation.Car_type}</td>
+                                        <td>${reservation.Car_Type}</td>
                                         <td>${reservation.Date}</td>
                                         <td>${reservation.Start_time}</td>
                                         <td>${reservation.End_time}</td>
