@@ -42,6 +42,8 @@
         </table>
     </div>
 
+    <div id="dataDisplay"></div>
+
     <script>
         // Fetch reservation data when button is clicked
         document.getElementById('fetchButton').addEventListener('click', function() {
@@ -62,13 +64,13 @@
                     }
                     data.forEach(item => {
                         let row = `<tr>
-                                        <td>${reservation.Location_ID}</td>
-                                        <td>${reservation.User_id}</td>
-                                        <td>${reservation.Car_Number}</td>
-                                        <td>${reservation.Car_Type}</td>
-                                        <td>${reservation.Date}</td>
-                                        <td>${reservation.Start_time}</td>
-                                        <td>${reservation.End_time}</td>
+                                        <td>${booking_reservation.Location_ID}</td>
+                                        <td>${booking_reservation.User_id}</td>
+                                        <td>${booking_reservation.Car_Number}</td>
+                                        <td>${booking_reservation.Car_Type}</td>
+                                        <td>${booking_reservation.Date}</td>
+                                        <td>${booking_reservation.Start_time}</td>
+                                        <td>${booking_reservation.End_time}</td>
                                    </tr>`;
                         tableBody.innerHTML += row;
                 
@@ -78,6 +80,55 @@
                     console.error('Error fetching reservation data:', err);
                     document.getElementById('reservationData').innerHTML = '<tr><td colspan="7" style="color: red;">Error fetching reservation data</td></tr>';
                 });
+        });
+    </script>
+
+    <h1>Reserve Your Parking Place</h1>
+    <form id="reservationForm">
+        <input type="text" name="Location_ID" placeholder="Location ID" required />
+        <input type="text" name="UserID" placeholder="User ID" required />
+        <input type="text" name="Car_Number" placeholder="Car Number" required />
+        <input type="text" name="Car_Type" placeholder="Car Type" required />
+        <input type="date" name="Date" required />
+        <input type="time" name="Start_Time" required />
+        <input type="time" name="End_Time" required />
+        <button type="submit">Book Reservation</button>
+    </form>
+    <script>
+        document.getElementById('reservationForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+    
+            const formData = new FormData(event.target);
+            const data = {
+                Location_ID: formData.get('Location_ID'),
+                UserID: formData.get('UserID'),
+                Car_Number: formData.get('Car_Number'),
+                Car_Type: formData.get('Car_Type'),
+                Date: formData.get('Date'),
+                Start_Time: formData.get('Start_Time'),
+                End_Time: formData.get('End_Time'),
+            };
+    
+            fetch('http://localhost:3000/api/book-reservation', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                const messageDisplay = document.getElementById('messageDisplay');
+                if (data.message) {
+                    // Show success message
+                    messageDisplay.innerHTML = `<p style="color: green;">${data.message}</p>`;
+                } else if (data.error) {
+                    // Show error message
+                    messageDisplay.innerHTML = `<p style="color: red;">${data.error}</p>`;
+                }
+            })
+            .catch(err => {
+                console.error('Error booking reservation:', err);
+                document.getElementById('messageDisplay').innerHTML = '<p style="color: red;">Error processing reservation request</p>';
+            });
         });
     </script>
 </body>

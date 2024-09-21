@@ -26,15 +26,22 @@ connection.connect((err) => {
         console.log('Connected to the MySQL database.');
     }
 });
+app.use(express.json());
+
 const cors = require('cors');
 app.use(cors()); // Use CORS with default settings
 
 // Serve static files (for serving HTML, CSS, and client-side JS)
 app.use(express.static(path.join(__dirname, 'public')))
 
-//path of reservation table
-const reservationRoute = require('./reservation');
-app.use('/reservation', reservationRoute)
+app.get('/api/reservations', async (req, res) => {
+  try {
+      const data = await reservations.getReservations();
+      res.json(data); // Send the data as JSON response
+  } catch (error) {
+      res.status(500).json({ message: 'Error fetching reservations', error });
+  }
+});
 
 //path of commmonuser table
 const commonRoute = require('./commmonuser');
@@ -113,6 +120,7 @@ app.post('/login', (req, res) => {
   
 
 // Start the server
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
